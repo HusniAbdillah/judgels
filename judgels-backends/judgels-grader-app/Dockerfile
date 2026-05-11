@@ -28,6 +28,7 @@ RUN apt-get update \
        curl \
        openssh-client \
        rsync \
+       wget \
     && apt-get -y --no-install-recommends install \
        fp-compiler \
        g++-13 \
@@ -41,6 +42,20 @@ RUN apt-get update \
     && ln -s /usr/bin/g++-13 /usr/bin/g++ \
     && curl -sSf https://sh.rustup.rs/ | bash -s -- -y -q --default-toolchain=1.57.0 \
     && rm -rf /var/lib/apt/lists/*
+
+# Scala 2
+RUN wget https://downloads.lightbend.com/scala/2.13.12/scala-2.13.12.tgz && \
+    tar -xvf scala-2.13.12.tgz -C /usr/share/ && \
+    rm scala-2.13.12.tgz && \
+    ln -s /usr/share/scala-2.13.12/bin/scala /usr/bin/scala && \
+    ln -s /usr/share/scala-2.13.12/bin/scalac /usr/bin/scalac
+
+# Scala 3
+RUN wget https://github.com/lampepfl/dotty/releases/download/3.3.1/scala3-3.3.1.tar.gz && \
+    tar -xvf scala3-3.3.1.tar.gz -C /usr/share/ && \
+    rm scala3-3.3.1.tar.gz && \
+    ln -s /usr/share/scala3-3.3.1/bin/scala /usr/bin/scala3 && \
+    ln -s /usr/share/scala3-3.3.1/bin/scalac /usr/bin/scala3-compiler
 
 WORKDIR /judgels/grader
 
