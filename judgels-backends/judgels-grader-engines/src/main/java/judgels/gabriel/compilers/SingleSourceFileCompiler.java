@@ -22,7 +22,7 @@ public class SingleSourceFileCompiler implements Compiler {
     private GradingLanguage language;
 
     public void prepare(Sandbox sandbox, File compilationDir, GradingLanguage language) {
-        sandbox.setTimeLimitInMilliseconds(20 * 1000);
+        sandbox.setTimeLimitInMilliseconds(language.getCompilationTimeLimitInMilliseconds());
         sandbox.setMemoryLimitInKilobytes(1024 * 1024);
 
         sandbox.resetRedirections();
@@ -48,11 +48,13 @@ public class SingleSourceFileCompiler implements Compiler {
         if (result.getStatus() == SandboxExecutionStatus.ZERO_EXIT_CODE) {
             File outputFile = sandbox.getFile(COMPILATION_OUTPUT_FILENAME);
             try {
+                String compilationOutput = FileUtils.readFileToString(outputFile, StandardCharsets.UTF_8);
                 FileUtils.forceDelete(outputFile);
                 FileUtils.copyFileToDirectory(sandbox.getFile(executableFilename), compilationDir);
 
                 return new CompilationResult.Builder()
                         .isSuccessful(true)
+                        .putOutputs(sourceKey, compilationOutput)
                         .build();
             } catch (IOException e) {
                 throw new CompilationException(e);
@@ -72,7 +74,23 @@ public class SingleSourceFileCompiler implements Compiler {
                 throw new CompilationException(e);
             }
         } else {
-            throw new CompilationException(String.join(" ", command) + " resulted in " + result);
+            File outputFile = sandbox.getFile(COMPILATION_OUTPUT_FILENAME);
+            String compilationOutput = "Compilation failed with sandbox status: " + result;
+            try {
+                if (outputFile.exists()) {
+                    String outputFromCompiler = FileUtils.readFileToString(outputFile, StandardCharsets.UTF_8);
+                    FileUtils.forceDelete(outputFile);
+                    if (!outputFromCompiler.isEmpty()) {
+                        compilationOutput = outputFromCompiler + "\n" + compilationOutput;
+                    }
+                }
+                return new CompilationResult.Builder()
+                        .isSuccessful(false)
+                        .putOutputs(sourceKey, compilationOutput)
+                        .build();
+            } catch (IOException e) {
+                throw new CompilationException(e);
+            }
         }
     }
 }

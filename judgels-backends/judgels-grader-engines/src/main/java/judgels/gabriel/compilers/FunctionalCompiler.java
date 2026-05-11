@@ -35,7 +35,7 @@ public class FunctionalCompiler implements Compiler {
             throw new PreparationException(this.graderFilename + " is missing");
         }
 
-        sandbox.setTimeLimitInMilliseconds(20 * 1000);
+        sandbox.setTimeLimitInMilliseconds(language.getCompilationTimeLimitInMilliseconds());
         sandbox.setMemoryLimitInKilobytes(1024 * 1024);
 
         sandbox.resetRedirections();
@@ -94,7 +94,23 @@ public class FunctionalCompiler implements Compiler {
                 throw new CompilationException(e);
             }
         } else {
-            throw new CompilationException(String.join(" ", command) + " resulted in " + result);
+            File outputFile = sandbox.getFile(COMPILATION_OUTPUT_FILENAME);
+            String compilationOutput = "Compilation failed with sandbox status: " + result;
+            try {
+                if (outputFile.exists()) {
+                    String outputFromCompiler = FileUtils.readFileToString(outputFile, StandardCharsets.UTF_8);
+                    FileUtils.forceDelete(outputFile);
+                    if (!outputFromCompiler.isEmpty()) {
+                        compilationOutput = outputFromCompiler + "\n" + compilationOutput;
+                    }
+                }
+                return new CompilationResult.Builder()
+                        .isSuccessful(false)
+                        .putOutputs(SubmissionSource.DEFAULT_KEY, compilationOutput)
+                        .build();
+            } catch (IOException e) {
+                throw new CompilationException(e);
+            }
         }
     }
 
