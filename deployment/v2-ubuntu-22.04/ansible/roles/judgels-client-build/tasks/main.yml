@@ -4,7 +4,7 @@
         source: build
         force_source: yes
         name: "ghcr.io/ia-toki/judgels/client:{{ app_version | default('latest', true) }}"
-        push: yes
+        push: no
         build:
           path: "{{ playbook_dir }}/../../../../judgels-client/dist"
           args:
