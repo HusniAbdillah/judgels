@@ -37,7 +37,7 @@ public class Scala2GradingLanguage implements GradingLanguage {
 
         StringBuilder jarCommandBuilder = new StringBuilder();
         jarCommandBuilder.append("ENTRY=\"Main\"; ");
-        jarCommandBuilder.append(String.format("for CAND in Main main Solution solution \"%s\"; do ", baseName));
+        jarCommandBuilder.append(String.format("for CAND in Main main Solution solution %s; do ", quote(baseName)));
         jarCommandBuilder.append(String.format("CLASS_FILE=\"$(find \"%s\" -type f -name \"${CAND}.class\" | head -n 1)\"; ", compilationOutputDir));
         jarCommandBuilder.append(String.format("if [ -n \"$CLASS_FILE\" ]; then ENTRY=\"$(echo \"$CLASS_FILE\" | sed 's#^%s/##; s#\\.class$##; s#/#.#g')\"; break; fi; ", compilationOutputDir));
         jarCommandBuilder.append(String.format("done; if ! find \"%s\" -type f -name '*.class' | grep -q .; then exit 1; fi; ", compilationOutputDir));
@@ -73,7 +73,7 @@ public class Scala2GradingLanguage implements GradingLanguage {
         );
     }
 
-    private String quote(String filename) {
-        return "\"" + filename + "\"";
+    private String quote(String value) {
+        return "'" + value.replace("'", "'\"'\"'") + "'";
     }
 }
