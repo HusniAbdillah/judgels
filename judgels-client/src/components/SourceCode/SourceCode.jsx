@@ -8,6 +8,7 @@ import rust from 'react-syntax-highlighter/languages/prism/rust';
 import SyntaxHighlighter, { registerLanguage } from 'react-syntax-highlighter/prism-light';
 import coy from 'react-syntax-highlighter/styles/prism/coy';
 import tomorrow from 'react-syntax-highlighter/styles/prism/tomorrow';
+import scala from 'react-syntax-highlighter/languages/prism/scala';
 
 import { useWebPrefs } from '../../modules/webPrefs';
 
@@ -20,6 +21,7 @@ registerLanguage('java', java);
 registerLanguage('pascal', pascal);
 registerLanguage('python', python);
 registerLanguage('rust', rust);
+registerLanguage('scala', scala);
 
 export function SourceCode({ isDarkMode, language, showLineNumbers = true, children }) {
   return (

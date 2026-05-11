@@ -14,6 +14,8 @@ export const gradingLanguageNamesMap = {
   Python3: 'Python 3',
   PyPy3: 'PyPy 3',
   Rust2021: 'Rust 2021',
+  Scala2: 'Scala 2',
+  Scala3: 'Scala 3',
   OutputOnly: '-',
 };
 
@@ -28,6 +30,8 @@ export const gradingLanguageFamiliesMap = {
   Python3: 'Python',
   PyPy3: 'Python',
   Rust2021: 'Rust',
+  Scala2: 'Scala',
+  Scala3: 'Scala',
 };
 
 export const gradingLanguageFilenameExtensionsMap = {
@@ -41,6 +45,8 @@ export const gradingLanguageFilenameExtensionsMap = {
   Python3: ['py'],
   PyPy3: ['py'],
   Rust2021: ['rs'],
+  Scala2: ['scala'],
+  Scala3: ['scala'],
   OutputOnly: ['zip'],
 };
 
@@ -55,6 +61,8 @@ export const gradingLanguageSyntaxHighlighterValueMap = {
   Python3: 'python',
   PyPy3: 'python',
   Rust2021: 'rust',
+  Scala2: 'scala',
+  Scala3: 'scala',
   OutputOnly: '',
 };
 
@@ -69,10 +77,14 @@ export const gradingLanguageEditorSubmissionFilenamesMap = {
   Python3: 'solution.py',
   PyPy3: 'solution.py',
   Rust2021: 'solution.rs',
+  Scala2: 'Solution.scala',
+  Scala3: 'Solution.scala',
 };
 
 export const gradingLanguageEditorSubmissionHintsMap = {
   Java: 'Public class name must be Solution',
+  Scala2: 'Object name must be Solution',
+  Scala3: 'Use @main def or object Solution',
 };
 
 export const gradingLanguages = Object.keys(gradingLanguageNamesMap)
