@@ -45,6 +45,7 @@ public class Scala3GradingLanguage implements GradingLanguage {
         jarCommandBuilder.append(String.format("for CAND in Main main Solution solution \"%s\"; do ", baseName));
         jarCommandBuilder.append(String.format("CLASS_FILE=\"$(find \"%s\" -type f -name \"${CAND}.class\" | head -n 1)\"; ", compilationOutputDir));
         jarCommandBuilder.append(String.format("if [ -n \"$CLASS_FILE\" ]; then ENTRY=\"$(echo \"$CLASS_FILE\" | sed 's#^%s/##; s#\\.class$##; s#/#.#g')\"; break; fi; ", compilationOutputDir));
+        jarCommandBuilder.append("done; ");
         jarCommandBuilder.append(String.format("if [ \"$ENTRY\" = \"Main\" ]; then TOP_MAIN=\"$(sed -n 's/^[[:space:]]*@main[[:space:]]\\+def[[:space:]]\\+\\([A-Za-z_][A-Za-z0-9_]*\\).*/\\1/p' %s | head -n 1)\"; ", quote(sourceFilename)));
         jarCommandBuilder.append(String.format("if [ -n \"$TOP_MAIN\" ]; then CLASS_FILE=\"$(find \"%s\" -type f -name \"${TOP_MAIN}.class\" | head -n 1)\"; ", compilationOutputDir));
         jarCommandBuilder.append(String.format("if [ -n \"$CLASS_FILE\" ]; then ENTRY=\"$(echo \"$CLASS_FILE\" | sed 's#^%s/##; s#\\.class$##; s#/#.#g')\"; fi; fi; fi; ", compilationOutputDir));
